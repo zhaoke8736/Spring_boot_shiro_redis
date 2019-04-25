@@ -1,0 +1,75 @@
+#顺便介绍下因为springboot集成了Tomcat和Jetty，默认使用Tomcat作为应用容器，开发者只需要将工程打成jar包直接丢到服务器上就可以执行了，
+#不需要再单独部署到was、jboss、tomcat这些应用服务器上
+#注意值前面一定有一个空格
+server:
+  #配置发布端口号
+  port: 8082
+  session-timeout: 30
+  tomcat.max-threads: 10
+  tomcat.uri-encoding: UTF-8
+  servlet:
+    #配置发布时的路径
+    context-path: /demo3
+    #配置热部署，使修改JSP的自动同步
+    init-parameters.development: true
+
+spring:                  #配置数据源
+  datasource:
+    url: jdbc:mysql://localhost:3306/zhaoke1?characterEncoding=UTF-8&useUnicode=true&useSSL=false 
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+  profiles:
+    #配置当前运行环境，这个值与application-*.yml等配置文件有关，application-dev.yml对应dev，application-test.yml就对应test，自定义的
+    active: dev
+  thymeleaf:
+    #页面热加载
+    cache: false
+    enabled: false
+  mvc: 
+    view:  #mvc视图解析器
+      #页面默认前缀目录
+      prefix: /
+      #页面默认后缀目录
+      suffix: .jsp
+
+mybatis:
+  #起别名。可省略写mybatis的xml中的resultType的全路径
+  #扫描实体类
+  type-aliases-package: com.example.demo.model
+  #Mybatis扫描(配置xml模式使用)
+  mapper-locations: classpath*:Mapper/*.xml
+  #静态资源放行
+  static-path-pattern: /static/**
+  global-config: 
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: false
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    
+    redis:
+    host: localhost
+    port: 6379
+    password: 
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: -1
+    timeout: 0
+    
+    cache:
+        type: ehcache
+        ehcache:
+          config: ehcache.xml
+    
+    ## LOG4J配置
+    rootCategory: DEBUG,stdout
+    ## 控制台输出
+appender.stdout: org.apache.log4j.ConsoleAppender
+appender.stdout.layout: org.apache.log4j.PatternLayout
